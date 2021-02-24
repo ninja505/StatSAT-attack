@@ -50,14 +50,14 @@ LIBS=-lfl -lz -lgomp ${LGLLIBFLAGS}
 DEFINES=-D __STDC_LIMIT_MACROS -D __STDC_FORMAT_MACROS -D IL_STD # -D HAVE_CONFIG_H
 
 # CPLEX defines. (The 3 lines have been mofified to add the correct directory, and also the -ldl flag)
-CPLEXINCLUDE:=-I/home/ankit/Documents/IBM_CPLEX/cplex/include/ -I/home/ankit/Documents/IBM_CPLEX/concert/include/
-CPLEXLIBRARIES:=-L/home/ankit/Documents/IBM_CPLEX/concert/lib/x86-64_linux/static_pic/ -L/home/ankit/Documents/IBM_CPLEX/cplex/lib/x86-64_linux/static_pic/
+CPLEXINCLUDE:=-I/home/ninja/mine/skool/research/ibm_cplex/cplex/include/ -I/home/ninja/mine/skool/research/ibm_cplex/concert/include/
+CPLEXLIBRARIES:=-L/home/ninja/mine/skool/research/ibm_cplex/concert/lib/x86-64_linux/static_pic/ -L/home/ninja/mine/skool/research/ibm_cplex/cplex/lib/x86-64_linux/static_pic/
 CPLEXLIBFLAGS:=-lilocplex -lcplex -lconcert -lm -lpthread -ldl
 # CPLEXINCLUDE:=-I/opt/ibm/ILOG/CPLEX_Studio125/cplex/include/ -I/opt/ibm/ILOG/CPLEX_Studio125/concert/include/
 # CPLEXLIBRARIES:=-L/opt/ibm/ILOG/CPLEX_Studio125/concert/lib/x86-64_sles10_4.1/static_pic/ -L/opt/ibm/ILOG/CPLEX_Studio125/cplex/lib/x86-64_sles10_4.1/static_pic/
 # CPLEXLIBFLAGS:=-lilocplex -lcplex -lconcert -lm -lpthread
 
-CXXFLAGS:=-c -fopenmp -std=c++0x ${INCLUDE} ${DEFINES} ${DBGFLAGS} ${OPTFLAGS} ${PGFLAGS} -Wno-strict-overflow # -Wno-unused-result -Wno-unused-function
+CXXFLAGS:=-c -fopenmp -std=c++0x ${INCLUDE} ${DEFINES} ${DBGFLAGS} ${OPTFLAGS} ${PGFLAGS} -Wno-strict-overflow -fPIE # -Wno-unused-result -Wno-unused-function
 LFLAGS:=-c -Wall ${INCLUDE} ${DEFINES} ${DBGFLAGS} ${OPTFLAGS} ${PGFLAGS} # -Wno-unused-result -Wno-unused-function
 LDFLAGS:=${DBGFLAGS} ${OPTFLAGS} ${PGFLAGS} $(CUDDLIBRARIES)  ${CPLEXLIBRARIES}  $(CMSATLIBRARIES) ${LGLLIBRARIES}
 SUFFIXES += .d

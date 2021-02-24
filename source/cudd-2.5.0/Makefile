@@ -15,7 +15,7 @@ CXX	= g++
 #CXX	= cxx
 
 # Specific options for compilation of C++ files.
-CXXFLAGS = -fPIC
+#CXXFLAGS = -fPIC
 # Stricter standard conformance for g++.
 #CXXFLAGS = -std=c++98
 # For Sun CC version 5, this invokes compatibility mode.

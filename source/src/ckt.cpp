@@ -1152,6 +1152,68 @@ namespace ckt_n {
         return output_probs;
     }
 
+    // version of evaluate_probs for aether spy
+    // error and est are assumed to be true
+    // key_values are removed
+    // input signal probabilities and input error probabilities are added as vectors of doubles
+   std::pair<std::vector<double>,std::vector<double>> ckt_t::evaluate_probs_as(const std::vector<double> input_signal_probs, const std::vector<double> input_error_probs)
+    {
+        // bool est tells us if estimated error rates are to be used
+
+        for (int i = 0; i < ckt_inputs.size(); ++i)
+        {
+            ckt_inputs[i]->output_prob = input_signal_probs[i];
+            ckt_inputs[i]->error_prob = input_error_probs[i];
+        }
+
+        std::vector<double> output_signal_probs(outputs.size());
+        std::vector<double> output_error_probs(outputs.size());
+        for (auto* gate : gates_sorted )
+        {
+            // std::cout<<"Gate "<<gate->name<<", function "<<gate->func<<" Input probs ";
+            // compute gate output probability of 1
+            std::vector<double> input_probs(gate->num_inputs());
+            std::vector<double> input_errors(gate->num_inputs());
+            if(gate->num_inputs() == 1)
+            {
+                input_probs = {gate->inputs[0]->output_prob};
+                input_errors = {gate->inputs[0]->error_prob};
+                // std::cout<<gate->inputs[0]->output_prob;
+            }
+            else if(gate->num_inputs() == 2)
+            {
+                input_probs = {gate->inputs[0]->output_prob,gate->inputs[1]->output_prob};
+                input_errors = {gate->inputs[0]->error_prob,gate->inputs[1]->error_prob};
+                // std::cout<<gate->inputs[0]->output_prob<<", "<<gate->inputs[1]->output_prob;
+            }
+            else
+            {
+                std::cout<<"More than 2 inputs!! CHECK!!\n";
+                exit(1);
+            }
+
+            //prob_correct is the probability of 1 when gate functions correctly
+            double prob_correct = gate->calc_out_prob(input_probs);
+            // std::cout<<" Prob correct "<<prob_correct;
+            // now use error rate of gate to find probability of 1
+            gate->output_prob = (1-0.01*est_error_rate)*prob_correct + (0.01*est_error_rate)*(1-prob_correct);
+            gate->error_prob = gate->calc_out_error_prob(input_probs,input_errors,est_error_rate);
+    }
+
+        // std::cout<<"Output probs = ";
+        // std::cout.precision(3);
+        for (int i = 0; i < outputs.size(); ++i)
+        {
+            output_signal_probs[i] = outputs[i]->output_prob;
+            output_error_probs[i] = outputs[i]->error_prob;
+            // std::cout<<output_probs[i]<<", ";
+        }
+        // std::cout<<"\n";
+
+        std::pair<std::vector<double>,std::vector<double>> output_probs = std::make_pair(output_signal_probs,output_error_probs);
+        return output_probs;
+    }
+
     //Ankit - A function to display all information of a gate
     void ckt_t::dump_gate_info(node_t* gate)
     {
